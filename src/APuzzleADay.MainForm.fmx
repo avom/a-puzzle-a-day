@@ -1,0 +1,135 @@
+object MainForm: TMainForm
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 665
+  ClientWidth = 404
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 0
+  object MonthComboBox: TComboBox
+    Anchors = [akTop, akRight]
+    DropDownCount = 12
+    Items.Strings = (
+      'Jan'
+      'Feb'
+      'Mar'
+      'Apr'
+      'May'
+      'Jun'
+      'Jul'
+      'Aug'
+      'Sep'
+      'Oct'
+      'Nov'
+      'Dec')
+    Position.X = 296.000000000000000000
+    Position.Y = 8.000000000000000000
+    TabOrder = 1
+  end
+  object MonthLabel: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 12.000000000000000000
+    Text = 'Month'
+    TabOrder = 0
+  end
+  object DayLabel: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 44.000000000000000000
+    Text = 'Day'
+    TabOrder = 2
+  end
+  object DayNumberBox: TNumberBox
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akTop, akRight]
+    TabOrder = 4
+    Cursor = crIBeam
+    DecimalDigits = 0
+    Min = 1.000000000000000000
+    Max = 31.000000000000000000
+    Value = 1.000000000000000000
+    TextSettings.HorzAlign = Trailing
+    Position.X = 296.000000000000000000
+    Position.Y = 40.000000000000000000
+    VertIncrement = 1.000000000000000000
+  end
+  object PaintBox: TPaintBox
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Margins.Left = 8.000000000000000000
+    Margins.Top = 8.000000000000000000
+    Margins.Right = 8.000000000000000000
+    Margins.Bottom = 8.000000000000000000
+    Position.X = 8.000000000000000000
+    Position.Y = 96.000000000000000000
+    Size.Width = 393.000000000000000000
+    Size.Height = 481.000000000000000000
+    Size.PlatformDefault = False
+    OnPaint = PaintBoxPaint
+  end
+  object SolveButton: TButton
+    Anchors = [akTop, akRight]
+    Position.X = 296.000000000000000000
+    Position.Y = 68.000000000000000000
+    Size.Width = 101.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Text = 'Solve'
+    OnClick = SolveButtonClick
+  end
+  object SolutionsFoundEdit: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akRight, akBottom]
+    TabOrder = 12
+    ReadOnly = True
+    TextSettings.HorzAlign = Trailing
+    Position.X = 300.000000000000000000
+    Position.Y = 636.000000000000000000
+  end
+  object TimeSpentLabel: TLabel
+    Anchors = [akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 616.000000000000000000
+    Text = 'Time spent'
+    TabOrder = 9
+  end
+  object SolutionsFoundLabel: TLabel
+    Anchors = [akRight, akBottom]
+    Position.X = 8.000000000000000000
+    Position.Y = 640.000000000000000000
+    Text = 'Solutions found'
+    TabOrder = 11
+  end
+  object TimeSpentEdit: TEdit
+    Touch.InteractiveGestures = [LongTap, DoubleTap]
+    Anchors = [akRight, akBottom]
+    TabOrder = 10
+    ReadOnly = True
+    TextSettings.HorzAlign = Trailing
+    Position.X = 300.000000000000000000
+    Position.Y = 608.000000000000000000
+  end
+  object SolutionNumLabel: TLabel
+    Position.X = 8.000000000000000000
+    Position.Y = 76.000000000000000000
+    TabOrder = 5
+  end
+  object PreviousButton: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 232.000000000000000000
+    Position.Y = 580.000000000000000000
+    TabOrder = 7
+    Text = 'Previous'
+    OnClick = PreviousButtonClick
+  end
+  object NextButton: TButton
+    Anchors = [akRight, akBottom]
+    Position.X = 320.000000000000000000
+    Position.Y = 580.000000000000000000
+    TabOrder = 8
+    Text = 'Next'
+    OnClick = NextButtonClick
+  end
+end
