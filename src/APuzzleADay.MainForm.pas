@@ -44,7 +44,6 @@ type
     procedure PreviousButtonClick(Sender: TObject);
     procedure NextButtonClick(Sender: TObject);
   private
-    FBoard: TBoard;
     FSolutions: TObjectList<TBoard>;
     FActiveSolution: Integer;
     procedure ShowSolution(Idx: Integer);
@@ -68,14 +67,11 @@ uses
 constructor TMainForm.Create(AOwner: TComponent);
 begin
   inherited;
-  BuildPieces;
-  FBoard := TBoard.Create;
   FSolutions := TObjectList<TBoard>.Create;
 end;
 
 destructor TMainForm.Destroy;
 begin
-  FBoard.Free;
   FSolutions.Free;
   inherited;
 end;
@@ -121,15 +117,16 @@ end;
 procedure TMainForm.SolveButtonClick(Sender: TObject);
 begin
   var Duration: TDateTime;
-  FBoard.Init(MonthComboBox.ItemIndex, Round(DayNumberBox.Value));
-  FSolutions.Clear;
-  var Solver := TSolver.Create;
+  var Board := TBoard.Create;
   try
+    Board.Init(MonthComboBox.ItemIndex, Round(DayNumberBox.Value));
+    FSolutions.Clear;
+
     var StartTick := Now;
-    Solver.Solve(FBoard, FSolutions);
+    Solve(Board, FSolutions);
     Duration := Now - StartTick;
   finally
-    Solver.Free;
+    Board.Free;
   end;
 
   SolutionsFoundEdit.Text := IntToStr(FSolutions.Count);

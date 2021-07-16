@@ -9,27 +9,23 @@ uses
   APuzzleADay.Board,
   APuzzleADay.Piece;
 
-type
-  TSolver = class
-  private
-    FBoard: TBoard;
-    FSolutions: TObjectList<TBoard>;
-    procedure Backtracking(PieceIndex: Integer);
-  public
-    procedure Solve(Board: TBoard; Solutions: TObjectList<TBoard>);
-  end;
-
-procedure BuildPieces;
-
-var
-  PieceCounts: array [0..7] of Integer;
-  Pieces: array [0..7, 0..7] of TPiece;
+procedure Solve(Board: TBoard; Solutions: TObjectList<TBoard>);
 
 implementation
 
 uses
   System.Math,
   System.UITypes;
+
+const
+  PieceCount = 8;
+
+var
+  PieceCounts: array [0..PieceCount - 1] of Integer;
+  Pieces: array [0..PieceCount - 1, 0..7] of TPiece;
+  Board: TBoard;
+  Solutions: TObjectList<TBoard>;
+  IsPieceUsed: array [0..PieceCount - 1] of Boolean;
 
 function Contains(PieceIdx: Integer; const Piece: TPiece): Boolean;
 begin
@@ -52,7 +48,7 @@ begin
   Pieces[6, 0] := TPiece.Create($000007 + $000100 + $010000);
   Pieces[7, 0] := TPiece.Create($000003 + $000200 + $060000);
 
-  for var i := 0 to 7 do
+  for var i := 0 to PieceCount - 1 do
   begin
     PieceCounts[i] := 1;
     var Piece := Pieces[i, 0].Mirror;
@@ -75,43 +71,51 @@ begin
   end;
 end;
 
-{ TSolver }
-
-procedure TSolver.Backtracking(PieceIndex: Integer);
+procedure Backtracking(Depth: Integer = 1; StartIdx: Integer = 0; UsedPieces: Byte = 0);
 begin
-  if PieceIndex < 0 then
+  if Depth > PieceCount then
   begin
     var Solution := TBoard.Create;
-    FSolutions.Add(Solution);
-    Solution.Assign(FBoard);
+    Solutions.Add(Solution);
+    Solution.Assign(Board);
     Exit;
   end;
 
-  var Current: UInt64 := 1;
-  for var i := 0 to 6 * 8 + 3 - 1 do
+  var Idx := StartIdx;
+  var Current := UInt64(1) shl StartIdx;
+  while Board.Mask and Current <> 0 do
   begin
-    if FBoard.Mask and Current = 0 then
-    begin
-      for var j := PieceCounts[PieceIndex] - 1 downto 0 do
-      begin
-        var Piece := Pieces[PieceIndex, j].ShiftedMask shl i;
-        if Piece and FBoard.Mask <> 0 then
-          Continue;
-
-        FBoard.PushPiece(Piece);
-        Backtracking(PieceIndex - 1);
-        FBoard.PopPiece;
-      end;
-    end;
+    Inc(Idx);
     Current := Current shl 1;
+  end;
+
+  for var i := 0 to PieceCount - 1 do
+  begin
+    if UsedPieces and (1 shl i) <> 0 then
+      Continue;
+
+    for var j := PieceCounts[i] - 1 downto 0 do
+    begin
+      var Piece := Pieces[i, j].ShiftedMask shl Idx;
+      if Piece and Board.Mask <> 0 then
+        Continue;
+
+      Board.PushPiece(Piece);
+      Backtracking(Depth + 1, Idx + 1, UsedPieces or (1 shl i));
+      Board.PopPiece;
+    end;
   end;
 end;
 
-procedure TSolver.Solve(Board: TBoard; Solutions: TObjectList<TBoard>);
+procedure Solve(Board: TBoard; Solutions: TObjectList<TBoard>);
 begin
-  FBoard := Board;
-  FSolutions := Solutions;
-  Backtracking(7);
+  APuzzleADay.Solver.Board := Board;
+  APuzzleADay.Solver.Solutions := Solutions;
+  Backtracking;
 end;
+
+initialization
+
+  BuildPieces;
 
 end.

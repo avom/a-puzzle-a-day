@@ -97,6 +97,7 @@ end;
 
 procedure TBoard.Init(Month, Day: Integer);
 begin
+  FMask := $FFF880808080C0C0;
   var One := UInt64(1);
   if Month < 6 then
     FMask := FMask or (One shl Month)
