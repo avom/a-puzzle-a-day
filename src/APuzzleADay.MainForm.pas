@@ -101,7 +101,7 @@ end;
 
 procedure TMainForm.PreviousButtonClick(Sender: TObject);
 begin
-  ShowSolution((FActiveSolution - 1) mod FSolutions.Count);
+  ShowSolution((FActiveSolution - 1 + FSolutions.Count) mod FSolutions.Count);
 end;
 
 procedure TMainForm.ShowSolution(Idx: Integer);

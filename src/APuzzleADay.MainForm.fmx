@@ -1,7 +1,7 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  Caption = 'Form1'
+  Caption = 'A Puzzle A Day Solver'
   ClientHeight = 665
   ClientWidth = 404
   FormFactor.Width = 320
@@ -92,6 +92,10 @@ object MainForm: TMainForm
     Anchors = [akRight, akBottom]
     Position.X = 8.000000000000000000
     Position.Y = 616.000000000000000000
+    Size.Width = 285.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
     Text = 'Time spent'
     TabOrder = 9
   end
@@ -99,6 +103,10 @@ object MainForm: TMainForm
     Anchors = [akRight, akBottom]
     Position.X = 8.000000000000000000
     Position.Y = 640.000000000000000000
+    Size.Width = 285.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
     Text = 'Solutions found'
     TabOrder = 11
   end
@@ -114,6 +122,11 @@ object MainForm: TMainForm
   object SolutionNumLabel: TLabel
     Position.X = 8.000000000000000000
     Position.Y = 76.000000000000000000
+    Size.Width = 285.000000000000000000
+    Size.Height = 17.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.WordWrap = False
+    TextSettings.Trimming = None
     TabOrder = 5
   end
   object PreviousButton: TButton

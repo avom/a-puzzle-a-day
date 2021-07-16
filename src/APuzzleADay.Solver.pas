@@ -25,7 +25,6 @@ var
   Pieces: array [0..PieceCount - 1, 0..7] of TPiece;
   Board: TBoard;
   Solutions: TObjectList<TBoard>;
-  IsPieceUsed: array [0..PieceCount - 1] of Boolean;
 
 function Contains(PieceIdx: Integer; const Piece: TPiece): Boolean;
 begin
