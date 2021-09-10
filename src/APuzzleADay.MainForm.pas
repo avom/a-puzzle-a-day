@@ -25,26 +25,24 @@ uses
 
 type
   TMainForm = class(TForm)
-    MonthComboBox: TComboBox;
-    MonthLabel: TLabel;
+    DaysComboBox: TComboBox;
     DayLabel: TLabel;
-    DayNumberBox: TNumberBox;
     PaintBox: TPaintBox;
-    SolveButton: TButton;
     SolutionsFoundEdit: TEdit;
     TimeSpentLabel: TLabel;
     SolutionsFoundLabel: TLabel;
     TimeSpentEdit: TEdit;
-    SolutionNumLabel: TLabel;
     PreviousButton: TButton;
     NextButton: TButton;
+    SolutionNumLabel: TLabel;
     procedure FormCreate(Sender: TObject);
-    procedure SolveButtonClick(Sender: TObject);
     procedure PaintBoxPaint(Sender: TObject; Canvas: TCanvas);
     procedure PreviousButtonClick(Sender: TObject);
     procedure NextButtonClick(Sender: TObject);
+    procedure DaysComboBoxChange(Sender: TObject);
   private
-    FSolutions: TObjectList<TBoard>;
+    FSolutionsPerDays: array [0..365] of TObjectList<TBoard>;
+    FActiveDay: Integer;
     FActiveSolution: Integer;
     procedure ShowSolution(Idx: Integer);
   public
@@ -67,33 +65,78 @@ uses
 constructor TMainForm.Create(AOwner: TComponent);
 begin
   inherited;
-  FSolutions := TObjectList<TBoard>.Create;
+  
+  var i: Integer;
+  for i := Low(FSolutionsPerDays) to High(FSolutionsPerDays) do
+    FSolutionsPerDays[i] := TObjectList<TBoard>.Create;
+end;
+
+procedure TMainForm.DaysComboBoxChange(Sender: TObject);
+begin
+  FActiveDay := DaysComboBox.ItemIndex;
+  ShowSolution(0);
 end;
 
 destructor TMainForm.Destroy;
 begin
-  FSolutions.Free;
+  var i: Integer;
+  for i := Low(FSolutionsPerDays) to High(FSolutionsPerDays) do
+    FSolutionsPerDays[i].Free;
   inherited;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   var Date := Now;
-  DayNumberBox.Value := DayOfTheMonth(Date);
-  MonthComboBox.ItemIndex := MonthOfTheYear(Date) - 1;
+  var CurrentDayOfMonth := DayOfTheMonth(Date);
+  var CurrentMonth := MonthOfTheYear(Date);
+
+  var ActiveDay := Low(FSolutionsPerDays);
+  var TotalSolutions := 0;
+  var StartTick := Now;
+  var Duration: TDateTime;
+  var Month, DayOfMonth: Integer;
+  for Month := Low(MonthDays[True]) to High(MonthDays[True]) do
+    for DayOfMonth := 1 to MonthDays[True][Month] do
+    begin
+      var Board := TBoard.Create;
+      try
+        Board.Init(Month, DayOfMonth);
+        FSolutionsPerDays[ActiveDay].Clear;
+
+        Solve(Board, FSolutionsPerDays[ActiveDay]);
+      finally
+        Board.Free;
+      end;
+
+      if (CurrentDayOfMonth = DayOfMonth) and (CurrentMonth = Month) then
+        FActiveDay := DaysComboBox.Items.Count;
+
+      var DayLabel := Format('%s %d    has %d solutions', [FormatSettings.ShortMonthNames[Month], DayOfMonth, FSolutionsPerDays[ActiveDay].Count]);
+      DaysComboBox.Items.Add(DayLabel);
+      
+      Inc(TotalSolutions, FSolutionsPerDays[ActiveDay].Count);
+      Inc(ActiveDay);
+    end;
+
+  Duration := Now - StartTick;
+  SolutionsFoundEdit.Text := IntToStr(TotalSolutions);
+  TimeSpentEdit.Text := Format('%.3f s', [Duration * 86400]);
+
+  DaysComboBox.ItemIndex := FActiveDay;
 end;
 
 procedure TMainForm.NextButtonClick(Sender: TObject);
 begin
-  ShowSolution((FActiveSolution + 1) mod FSolutions.Count);
+  ShowSolution((FActiveSolution + 1) mod FSolutionsPerDays[FActiveDay].Count);
 end;
 
 procedure TMainForm.PaintBoxPaint(Sender: TObject; Canvas: TCanvas);
 begin
   Canvas.BeginScene;
   try
-    if FActiveSolution < FSolutions.Count then
-      FSolutions[FActiveSolution].Draw(Canvas)
+    if FActiveSolution < FSolutionsPerDays[FActiveDay].Count then
+      FSolutionsPerDays[FActiveDay][FActiveSolution].Draw(Canvas)
   finally
     Canvas.EndScene;
   end;
@@ -101,37 +144,17 @@ end;
 
 procedure TMainForm.PreviousButtonClick(Sender: TObject);
 begin
-  ShowSolution((FActiveSolution - 1 + FSolutions.Count) mod FSolutions.Count);
+  ShowSolution((FActiveSolution - 1 + FSolutionsPerDays[FActiveDay].Count) mod FSolutionsPerDays[FActiveDay].Count);
 end;
 
 procedure TMainForm.ShowSolution(Idx: Integer);
 begin
   FActiveSolution := Idx;
-  if FActiveSolution < FSolutions.Count then
+  if FActiveSolution < FSolutionsPerDays[FActiveDay].Count then
     SolutionNumLabel.Text := 'Solution ' + IntToStr(Idx + 1)
   else
     SolutionNumLabel.Text := '';
   Invalidate;
-end;
-
-procedure TMainForm.SolveButtonClick(Sender: TObject);
-begin
-  var Duration: TDateTime;
-  var Board := TBoard.Create;
-  try
-    Board.Init(MonthComboBox.ItemIndex, Round(DayNumberBox.Value));
-    FSolutions.Clear;
-
-    var StartTick := Now;
-    Solve(Board, FSolutions);
-    Duration := Now - StartTick;
-  finally
-    Board.Free;
-  end;
-
-  SolutionsFoundEdit.Text := IntToStr(FSolutions.Count);
-  TimeSpentEdit.Text := Format('%.3f s', [Duration * 86400]);
-  ShowSolution(0);
 end;
 
 end.

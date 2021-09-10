@@ -9,51 +9,22 @@ object MainForm: TMainForm
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object MonthComboBox: TComboBox
+  object DaysComboBox: TComboBox
     Anchors = [akTop, akRight]
     DropDownCount = 12
-    Items.Strings = (
-      'Jan'
-      'Feb'
-      'Mar'
-      'Apr'
-      'May'
-      'Jun'
-      'Jul'
-      'Aug'
-      'Sep'
-      'Oct'
-      'Nov'
-      'Dec')
-    Position.X = 296.000000000000000000
+    Position.X = 112.000000000000000000
     Position.Y = 8.000000000000000000
+    Size.Width = 284.000000000000000000
+    Size.Height = 22.000000000000000000
+    Size.PlatformDefault = False
     TabOrder = 1
-  end
-  object MonthLabel: TLabel
-    Position.X = 8.000000000000000000
-    Position.Y = 12.000000000000000000
-    Text = 'Month'
-    TabOrder = 0
+    OnChange = DaysComboBoxChange
   end
   object DayLabel: TLabel
     Position.X = 8.000000000000000000
-    Position.Y = 44.000000000000000000
-    Text = 'Day'
-    TabOrder = 2
-  end
-  object DayNumberBox: TNumberBox
-    Touch.InteractiveGestures = [LongTap, DoubleTap]
-    Anchors = [akTop, akRight]
-    TabOrder = 4
-    Cursor = crIBeam
-    DecimalDigits = 0
-    Min = 1.000000000000000000
-    Max = 31.000000000000000000
-    Value = 1.000000000000000000
-    TextSettings.HorzAlign = Trailing
-    Position.X = 296.000000000000000000
-    Position.Y = 40.000000000000000000
-    VertIncrement = 1.000000000000000000
+    Position.Y = 12.000000000000000000
+    Text = 'Select day'
+    TabOrder = 0
   end
   object PaintBox: TPaintBox
     Anchors = [akLeft, akTop, akRight, akBottom]
@@ -62,27 +33,16 @@ object MainForm: TMainForm
     Margins.Right = 8.000000000000000000
     Margins.Bottom = 8.000000000000000000
     Position.X = 8.000000000000000000
-    Position.Y = 96.000000000000000000
+    Position.Y = 40.000000000000000000
     Size.Width = 393.000000000000000000
-    Size.Height = 481.000000000000000000
+    Size.Height = 537.000000000000000000
     Size.PlatformDefault = False
     OnPaint = PaintBoxPaint
-  end
-  object SolveButton: TButton
-    Anchors = [akTop, akRight]
-    Position.X = 296.000000000000000000
-    Position.Y = 68.000000000000000000
-    Size.Width = 101.000000000000000000
-    Size.Height = 22.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 6
-    Text = 'Solve'
-    OnClick = SolveButtonClick
   end
   object SolutionsFoundEdit: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
     Anchors = [akRight, akBottom]
-    TabOrder = 12
+    TabOrder = 7
     ReadOnly = True
     TextSettings.HorzAlign = Trailing
     Position.X = 300.000000000000000000
@@ -97,7 +57,7 @@ object MainForm: TMainForm
     Size.PlatformDefault = False
     TextSettings.WordWrap = False
     Text = 'Time spent'
-    TabOrder = 9
+    TabOrder = 4
   end
   object SolutionsFoundLabel: TLabel
     Anchors = [akRight, akBottom]
@@ -107,33 +67,23 @@ object MainForm: TMainForm
     Size.Height = 17.000000000000000000
     Size.PlatformDefault = False
     TextSettings.WordWrap = False
-    Text = 'Solutions found'
-    TabOrder = 11
+    Text = 'Total Solutions found'
+    TabOrder = 6
   end
   object TimeSpentEdit: TEdit
     Touch.InteractiveGestures = [LongTap, DoubleTap]
     Anchors = [akRight, akBottom]
-    TabOrder = 10
+    TabOrder = 5
     ReadOnly = True
     TextSettings.HorzAlign = Trailing
     Position.X = 300.000000000000000000
     Position.Y = 608.000000000000000000
   end
-  object SolutionNumLabel: TLabel
-    Position.X = 8.000000000000000000
-    Position.Y = 76.000000000000000000
-    Size.Width = 285.000000000000000000
-    Size.Height = 17.000000000000000000
-    Size.PlatformDefault = False
-    TextSettings.WordWrap = False
-    TextSettings.Trimming = None
-    TabOrder = 5
-  end
   object PreviousButton: TButton
     Anchors = [akRight, akBottom]
     Position.X = 232.000000000000000000
     Position.Y = 580.000000000000000000
-    TabOrder = 7
+    TabOrder = 2
     Text = 'Previous'
     OnClick = PreviousButtonClick
   end
@@ -141,8 +91,14 @@ object MainForm: TMainForm
     Anchors = [akRight, akBottom]
     Position.X = 320.000000000000000000
     Position.Y = 580.000000000000000000
-    TabOrder = 8
+    TabOrder = 3
     Text = 'Next'
     OnClick = NextButtonClick
+  end
+  object SolutionNumLabel: TLabel
+    Position.X = 104.000000000000000000
+    Position.Y = 584.000000000000000000
+    TextSettings.VertAlign = Trailing
+    TabOrder = 8
   end
 end
